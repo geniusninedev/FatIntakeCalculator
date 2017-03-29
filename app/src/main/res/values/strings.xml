@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_id">Fat Intake</string>
+    <string name="app_id">FatIntake</string>
     <string name="app_name">Fat Intake</string>
     <string name="facebook_app_id">267933240296176</string>
     <string name="fb_login_protocol_scheme">fb267933240296176</string>
