@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +26,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.nineinfosys.android.fatintakecalculator.MainActivityDrawer;
 import com.nineinfosys.android.fatintakecalculator.R;
+
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +37,13 @@ public class FatIntakeFragment extends Fragment {
 
     //View Declarations
     EditText editTextAge, editTextHeight, editTextWeight,edittextfeet,edittextInch,edittextWeightInLb,edittextWeightInST,edittextWeightInSTLb;
-    Button buttonCalculate;
+    Button buttonCalculate,buttonMoreInfo;
     ImageView imageViewGender,imageViewHeight,imageViewWeight;
     private RadioGroup radioGroupSex,radioGroupHeight,radioGroupWeight;
     private RadioButton radioButtonSex,radioButtonHeight,radioButtonWeight;
-    TextView textViewMainTainWeight,textViewCalorieslosehaifkg,textViewCaloriesloseOneKg,textViewCaloriesgainhaifkg,textViewCaloriesgainonekg;
+    TextView textViewMainTainWeight,textViewCalorieslosehaifkg,textViewCaloriesloseOneKg,textViewCaloriesgainhaifkg,textViewCaloriesgainonekg,textViewCalorie;
     Spinner spinneractivity;
+    WebView Introwebview;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,6 +68,7 @@ public class FatIntakeFragment extends Fragment {
         imageViewHeight = (ImageView)v.findViewById(R.id.imageViewHeight);
         imageViewWeight = (ImageView) v.findViewById(R.id.imageViewWeight);
         buttonCalculate = (Button) v.findViewById(R.id.buttonCalculate);
+        buttonMoreInfo = (Button) v.findViewById(R.id.buttonMoreInfo);
         spinneractivity=(Spinner)v.findViewById(R.id.spinneractivity);
 
         // Spinner Drop down elements
@@ -81,12 +87,36 @@ public class FatIntakeFragment extends Fragment {
 
         // attaching data adapter to spinner
         spinneractivity.setAdapter(dataAdapter);
-
+        textViewCalorie= (TextView) v.findViewById(R.id.textViewCalorie);
         textViewMainTainWeight = (TextView) v.findViewById(R.id.textViewMainTainWeight);
         textViewCalorieslosehaifkg = (TextView) v.findViewById(R.id.textViewCalorieslosehaifkg);
         textViewCaloriesloseOneKg= (TextView) v.findViewById(R.id.textViewCaloriesloseOneKg);
         textViewCaloriesgainhaifkg= (TextView) v.findViewById(R.id.textViewCaloriesgainhaifkg);
         textViewCaloriesgainonekg= (TextView) v.findViewById(R.id.textViewCaloriesgainonekg);
+
+
+        buttonMoreInfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //alert Dialog Declaration For More Infomation
+                final LayoutInflater inflaterMoreInfo = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                final View alertLayoutMoreInfo = inflaterMoreInfo.inflate(R.layout.info_webview, null);
+                final AlertDialog.Builder alertDialogBuilderMoreInfo = new AlertDialog.Builder(getActivity());
+                alertDialogBuilderMoreInfo.setTitle("More Info:");
+                Introwebview = (WebView) alertLayoutMoreInfo.findViewById(R.id.webViewinfo);
+                WebSettings IntroWebSettings = Introwebview.getSettings();
+                IntroWebSettings.setBuiltInZoomControls(true);
+                IntroWebSettings.setJavaScriptEnabled(true);
+                Introwebview.setWebViewClient(new WebViewClient());
+                Introwebview.loadUrl("file:///android_res/raw/fatintack_two.html");
+                alertDialogBuilderMoreInfo.setView(alertLayoutMoreInfo);
+                final AlertDialog alertDialogMoreInfo = alertDialogBuilderMoreInfo.create();
+                alertDialogMoreInfo.show();
+            }
+        });
+
+
+
         //alert Dialog Declaration For Gender
         final LayoutInflater inflaterGender = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View alertLayoutGender = inflaterGender.inflate(R.layout.dialog, null);
@@ -342,14 +372,22 @@ public class FatIntakeFragment extends Fragment {
         float resultMaintainWeight,resultlosehaifkg,resultloseOneKg,resultgainhaifkg,resultGainOneKg;
         DecimalFormat f = new DecimalFormat("##.00");
         resultMaintainWeight = calculateBMR.Sedentary() ;
-        textViewMainTainWeight.setText(f.format(resultMaintainWeight));
+        textViewCalorie.setText(f.format(resultMaintainWeight)+" Calories");
+        textViewMainTainWeight.setText("You need "+f.format(resultMaintainWeight)+" Calories/day to maintain your weight. You should take "+f.format(((resultMaintainWeight/8.80)*20)/100)+" - "+f.format(((resultMaintainWeight/8.80)*35)/100)+" grams (20%-35%) of fat per day, within which "+f.format(((resultMaintainWeight/8.80)*10)/100)+"grams (10%) or less saturated fats. Take "+f.format(((resultMaintainWeight/8.80)*7)/100)+"grams (7%) or less saturated fats to further reduce the risk of heart disease.");
         resultlosehaifkg=calculateBMR.LoseHaifKg();
-        textViewCalorieslosehaifkg.setText(f.format(resultlosehaifkg));
+        textViewCalorieslosehaifkg.setText("You need "+f.format(resultlosehaifkg)+" Calories/day to lose 0.5 kg per week. You should take "+f.format(((resultlosehaifkg/8.80)*20)/100)+" - "+f.format(((resultlosehaifkg/8.80)*35)/100)+" grams (20%-35%) of fat per day, within which "+f.format(((resultlosehaifkg/8.80)*10)/100)+"grams (10%) or less saturated fats. Take "+f.format(((resultlosehaifkg/8.80)*7)/100)+"grams (7%) or less saturated fats to further reduce the risk of heart disease.");
         resultloseOneKg=calculateBMR.LoseOnekg();
-        textViewCaloriesloseOneKg.setText(f.format(resultloseOneKg));
+        textViewCaloriesloseOneKg.setText("You need "+f.format(resultloseOneKg)+" Calories/day to lose 1 kg per week. You should take "+f.format(((resultloseOneKg/8.80)*20)/100)+" - "+f.format(((resultloseOneKg/8.80)*35)/100)+" grams (20%-35%) of fat per day, within which "+f.format(((resultloseOneKg/8.80)*10)/100)+"grams (10%) or less saturated fats. Take "+f.format(((resultloseOneKg/8.80)*7)/100)+"grams (7%) or less saturated fats to further reduce the risk of heart disease.");
         resultgainhaifkg=calculateBMR.GainHaifKg();
-        textViewCaloriesgainhaifkg.setText(f.format(resultgainhaifkg));
+        textViewCaloriesgainhaifkg.setText("You need "+f.format(resultgainhaifkg)+" Calories/day to gain 0.5 kg per week. You should take "+f.format(((resultgainhaifkg/8.80)*20)/100)+" - "+f.format(((resultgainhaifkg/8.80)*35)/100)+" grams (20%-35%) of fat per day, within which "+f.format(((resultgainhaifkg/8.80)*10)/100)+"grams (10%) or less saturated fats. Take "+f.format(((resultgainhaifkg/8.80)*7)/100)+"grams (7%) or less saturated fats to further reduce the risk of heart disease.");
         resultGainOneKg=calculateBMR.GainOnekg();
-        textViewCaloriesgainonekg.setText(f.format(resultGainOneKg));
+        textViewCaloriesgainonekg.setText("You need "+f.format(resultGainOneKg)+" Calories/day to gain 1 kg per week. You should take "+f.format(((resultGainOneKg/8.80)*20)/100)+" - "+f.format(((resultGainOneKg/8.80)*35)/100)+" grams (20%-35%) of fat per day, within which "+f.format(((resultGainOneKg/8.80)*10)/100)+"grams (10%) or less saturated fats. Take "+f.format(((resultGainOneKg/8.80)*7)/100)+"grams (7%) or less saturated fats to further reduce the risk of heart disease.");
+    }
+    public class WebViewClient extends android.webkit.WebViewClient {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            return super.shouldOverrideUrlLoading(view, url);
+        }
     }
 }

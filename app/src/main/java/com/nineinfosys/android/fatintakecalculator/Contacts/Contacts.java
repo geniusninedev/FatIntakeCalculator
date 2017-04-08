@@ -1,4 +1,4 @@
-package com.nineinfosys.android.fatintakecalculator.Login;
+package com.nineinfosys.android.fatintakecalculator.Contacts;
 
 /**
  * Created by Dev on 13-03-2017.
