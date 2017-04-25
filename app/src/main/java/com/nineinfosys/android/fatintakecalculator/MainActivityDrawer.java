@@ -44,8 +44,6 @@ import com.nineinfosys.android.fatintakecalculator.Contacts.Contacts;
 import com.nineinfosys.android.fatintakecalculator.DashBord.GetApp;
 import com.nineinfosys.android.fatintakecalculator.FatIntake.FatIntakeFragment;
 import com.nineinfosys.android.fatintakecalculator.FoodNutritionTable.FoodNutritionTable;
-
-import com.nineinfosys.android.fatintakecalculator.Forum.ForumActivity;
 import com.nineinfosys.android.fatintakecalculator.LoginActivity.Login;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -111,16 +109,7 @@ public class MainActivityDrawer extends AppCompatActivity {
          */
 
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //  Toast.makeText(MainActivityDrawer.this,"This Is Under Consturtion", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(MainActivityDrawer.this, ForumActivity.class));
-                /*Intent intent = new Intent(MainActivity.this, NewMessageActivity.class);
-                startActivity(intent);*/
-            }
-        });
+
 
         mNavigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -128,18 +117,9 @@ public class MainActivityDrawer extends AppCompatActivity {
                 mDrawerLayout.closeDrawers();
 
 
-                if (menuItem.getItemId() == R.id.FatIntake) {
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.containerView, new FatIntakeFragment()).commit();
-             /*      Intent intent=new Intent(MainActivityDrawer.this, com.nineinfosys.android.weightlosscalculators.FatIntake.ForumMainActivity.class);
-                    startActivity(intent);*/
 
-                }
                 if (menuItem.getItemId() == R.id.FoodNutritionTable) {
-                    FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.containerView, new FoodNutritionTable()).commit();
-                    /*Intent intent=new Intent(MainActivityDrawer.this, com.nineinfosys.android.weightlosscalculators.Weight.ForumMainActivity.class);
-                    startActivity(intent);*/
+                    startActivity(new Intent(MainActivityDrawer.this, FoodNutritionTable.class));
                 }
                 if (menuItem.getItemId() == R.id.MoreApps) {
 
